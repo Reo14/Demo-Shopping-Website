@@ -1,6 +1,20 @@
 <!-- product-list.component.html -->
+<div class="products-list-header">
+  <div class="sort-add-buttons">
+    <button class="sort-button">
+      Sort By
+      <select (change)="onSortChange($event)">
+        <option value="update">Update Time</option>
+        <option value="price">Price</option>
+      </select>
+    </button>
+    <button *ngIf="isAdmin" class="add-product-button" (click)="addProduct()">
+      Add Product
+    </button>
+  </div>
+</div>
 <div class="products-list">
-  <div *ngFor="let product of products" class="product-item">
+  <div *ngFor="let product of sortedProducts | paginate: { itemsPerPage: itemsPerPage, currentPage: p }" class="product-item">
     <!-- <img [src]="product.imageUrl || 'default-image.jpg'" alt="{{ product.name }}"> -->
     <h2>{{ product.name }}</h2>
     <p>{{ product.description }}</p>
@@ -11,5 +25,4 @@
     </div>
   </div>
 </div>
-
-
+<pagination-controls (pageChange)="p = $event"></pagination-controls>

@@ -4,6 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { CommonModule } from '@angular/common';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 import { AppComponent } from './app.component';
 import { AuthComponent } from './auth/auth.component';
@@ -35,6 +36,7 @@ import { CartService } from './services/cart.service';
     HttpClientModule,
     ReactiveFormsModule,
     CommonModule,
+    NgxPaginationModule
   ],
   exports: [
     HeaderComponent,

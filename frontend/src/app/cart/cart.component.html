@@ -1,0 +1,4 @@
+<div *ngFor="let item of cartItems">
+  <h2>{{ item.product.name }}</h2>
+  <p>{{ item.product.price | currency }} x {{ item.quantity }}</p>
+</div>

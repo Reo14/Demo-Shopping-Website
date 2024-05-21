@@ -1,0 +1,22 @@
+<form [formGroup]="authForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label for="email">Email: </label>
+    <input id="email" formControlName="email">
+    <div *ngIf="authForm.get('email')?.invalid && authForm.get('email')?.touched">
+      <small *ngIf="authForm.get('email')?.errors?.['required']">Email is required.</small>
+      <small *ngIf="authForm.get('email')?.errors?.['email']">Email is invalid.</small>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="password">Password: </label>
+    <input id="password" type="password" formControlName="password">
+    <div *ngIf="authForm.get('password')?.invalid && authForm.get('password')?.touched">
+      <small *ngIf="authForm.get('password')?.errors?.['required']">Password is required.</small>
+      <small *ngIf="authForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters long.</small>
+    </div>
+  </div>
+  <button type="submit" [disabled]="authForm.invalid">{{ isLoginMode ? 'Login' : 'Sign Up' }}</button>
+  <button type="button" (click)="switchMode()">
+    {{ isLoginMode ? 'Sign Up' : 'Login' }}
+  </button>
+</form>

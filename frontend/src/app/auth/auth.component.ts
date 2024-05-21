@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-auth',
@@ -11,50 +12,54 @@ export class AuthComponent implements OnInit {
   authForm: FormGroup;
   isLoginMode = true;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) {
     this.authForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      username: ['', [Validators.required]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      role: ['user'] // Default role, you can change based on your requirements
     });
   }
 
   ngOnInit() {
     console.log('AuthComponent initialized');
-    console.log('Form Valid:', this.authForm.valid);
-    console.log('Email Valid:', this.authForm.get('email')?.valid);
-    console.log('Password Valid:', this.authForm.get('password')?.valid);
   }
 
   onSubmit() {
-    console.log('Form Submitted');
     if (this.authForm.invalid) {
-      console.log('Form Invalid:', this.authForm.errors);
-      console.log('Email Errors:', this.authForm.get('email')?.errors);
-      console.log('Password Errors:', this.authForm.get('password')?.errors);
       return;
     }
 
     if (this.isLoginMode) {
-      // 登录逻辑
       this.login();
     } else {
-      // 注册逻辑
       this.signup();
     }
   }
 
   login() {
-    // 执行登录操作
-    console.log('登录');
-    // 假设登录成功后，跳转到首页
-    this.router.navigate(['/']);
+    const { username, password } = this.authForm.value;
+    this.authService.login(username, password).subscribe(
+      response => {
+        console.log('Login successful', response);
+        this.router.navigate(['/']);
+      },
+      error => {
+        console.error('Login error', error);
+      }
+    );
   }
 
   signup() {
-    // 执行注册操作
-    console.log('注册');
-    // 假设注册成功后，跳转到首页
-    this.router.navigate(['/']);
+    const { username, password, role } = this.authForm.value;
+    this.authService.signup(username, password, role).subscribe(
+      response => {
+        console.log('Signup successful', response);
+        this.router.navigate(['/']);
+      },
+      error => {
+        console.error('Signup error', error);
+      }
+    );
   }
 
   switchMode() {

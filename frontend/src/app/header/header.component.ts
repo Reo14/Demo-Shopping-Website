@@ -1,5 +1,7 @@
+// header.component.ts
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -7,26 +9,29 @@ import { Router } from '@angular/router';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
-  isLoggedIn = false; // 模拟用户登录状态
+  isLoggedIn = false;
+  isAdmin = false;
 
-  constructor(private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {
+    this.authService.getUserRole().subscribe(role => {
+      this.isLoggedIn = !!role;
+      this.isAdmin = role === 'admin';
+    });
+  }
 
-  handleAuthAction() {
+  onSignInOrOut(): void {
     if (this.isLoggedIn) {
-      this.signOut();
+      this.authService.logout();
+      this.router.navigate(['/']);
     } else {
-      this.signIn();
+      this.router.navigate(['/auth']);
     }
   }
 
-  signIn() {
-    // 跳转到登录页面
-    this.router.navigate(['/auth']);
-  }
+  
 
-  signOut() {
-    // 执行登出逻辑
-    this.isLoggedIn = false;
-    console.log('登出');
+  addProduct(): void {
+    console.log('Add product');
+    // 实现添加产品逻辑
   }
 }

@@ -20,8 +20,10 @@ const login = async (req, res) => {
         if (!user || !await bcrypt.compare(password, user.password)) {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
+        console.log('User found:', user); // 打印用户对象，确认是否包含角色字段
         const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET);
-        res.json({ token });
+        console.log('User role:', user.role); // 打印用户角色
+        res.json({ token, role: user.role }); // 返回 token 和 role
     } catch (err) {
         res.status(400).json({ error: err.message });
     }

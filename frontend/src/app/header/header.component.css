@@ -23,20 +23,27 @@ body {
 }
 
 .search-input {
-  padding: 5px;
+  padding: 0 15px;
   border-radius: 5px 0 0 5px;
   border: 1px solid #ccc;
   outline: none;
+  height: 40px; /* 统一高度 */
+  font-size: 16px; /* 统一字体大小 */
 }
 
 .search-button {
-  padding: 5px;
+  padding: 0 15px;
   border: none;
   background-color: #007bff;
   color: #fff;
   border-radius: 0 5px 5px 0;
   cursor: pointer;
   outline: none;
+  height: 40px; /* 统一高度 */
+  font-size: 16px; /* 统一字体大小 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .header-right {
@@ -47,7 +54,7 @@ body {
 .sign-out-button, .cart-button {
   display: flex;
   align-items: center;
-  padding: 5px 10px;
+  padding: 0 15px;
   margin-left: 10px;
   border: none;
   background-color: #f8f9fa;
@@ -55,8 +62,11 @@ body {
   border-radius: 5px;
   cursor: pointer;
   outline: none;
+  height: 40px; /* 统一高度 */
+  font-size: 16px; /* 统一字体大小 */
 }
 
 .sign-out-button i, .cart-button i {
-  margin-right: 5px;
+  margin-right: 8px;
+  font-size: 16px;
 }

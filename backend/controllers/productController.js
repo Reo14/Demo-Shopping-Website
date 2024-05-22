@@ -19,6 +19,19 @@ const listProducts = async (req, res) => {
     }
 };
 
+const getProduct = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const product = await Product.findOne({ where: { id } });
+        if (!product) {
+            return res.status(404).json({ error: 'Product not found' });
+        }
+        res.json(product);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+};
+
 const editProduct = async (req, res) => {
     const { id } = req.params;
     const { name, description, price, stock } = req.body;
@@ -38,4 +51,18 @@ const editProduct = async (req, res) => {
     }
 };
 
-module.exports = { createProduct, listProducts, editProduct };
+const deleteProduct = async (req, res) => {
+    const { id } = req.params;
+    try {
+      const product = await Product.findByPk(id);
+      if (!product) {
+        return res.status(404).json({ error: 'Product not found' });
+      }
+      await product.destroy();
+      res.status(204).send();
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+  };
+
+module.exports = { createProduct, listProducts, getProduct, editProduct, deleteProduct };

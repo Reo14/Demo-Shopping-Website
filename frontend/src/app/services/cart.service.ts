@@ -1,37 +1,73 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CartItem } from '../models/cart-item.models';
-import { Product } from '../models/product.models';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
-  private cartItems: CartItem[] = [];
-  private cartItemsSubject: BehaviorSubject<CartItem[]> = new BehaviorSubject(this.cartItems);
+  private cartItemsSubject = new BehaviorSubject<CartItem[]>([]);
+  cartItems$ = this.cartItemsSubject.asObservable();
 
-  constructor() {}
+  private apiUrl = 'http://localhost:4000/cart'; // 确保路径是正确的
+
+  constructor(private http: HttpClient) {}
+
+  private getAuthHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token'); // JWT存储在localStorage中
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+  }
+
+  loadCartItems(): void {
+    this.http.get<CartItem[]>(this.apiUrl, { headers: this.getAuthHeaders() })
+      .pipe(
+        tap(cartItems => this.cartItemsSubject.next(cartItems))
+      )
+      .subscribe({
+        error: err => console.error('Error loading cart items', err) // 错误处理
+      });
+  }
 
   getCartItems(): Observable<CartItem[]> {
-    return this.cartItemsSubject.asObservable();
+    return this.cartItems$;
   }
 
-  addToCart(product: Product): void {
-    const existingCartItem = this.cartItems.find(item => item.product.id === product.id);
+  addToCart(productId: string, quantity: number = 1): void {
+    this.http.post<CartItem>(this.apiUrl, { productId, quantity }, { headers: this.getAuthHeaders() })
+      .pipe(
+        tap(() => this.loadCartItems()) // 重新加载购物车项
+      )
+      .subscribe({
+        error: err => console.error('Error adding to cart', err) // 错误处理
+      });
+  }
 
-    if (existingCartItem) {
-      existingCartItem.quantity += 1;
-    } else {
-      const cartItem: CartItem = {
-        product: product,
-        quantity: 1
-      };
-      this.cartItems.push(cartItem);
-    }
-    this.cartItemsSubject.next(this.cartItems);
-    console.log('Current cart items:', this.cartItems);
+  updateCartItem(id: string, quantity: number): Observable<CartItem> {
+    return this.http.put<CartItem>(`${this.apiUrl}/${id}`, { quantity }, { headers: this.getAuthHeaders() })
+      .pipe(
+        tap(() => this.loadCartItems()) // 重新加载购物车项
+      );
+  }
+
+  removeFromCart(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers: this.getAuthHeaders() })
+      .pipe(
+        tap(() => this.loadCartItems()) // 重新加载购物车项
+      );
+  }
+
+  clearCart(): void {
+    this.http.delete(this.apiUrl, { headers: this.getAuthHeaders() })
+      .pipe(
+        tap(() => this.cartItemsSubject.next([])) // 清空购物车项
+      )
+      .subscribe({
+        error: err => console.error('Error clearing cart', err) // 错误处理
+      });
   }
 }
-
-

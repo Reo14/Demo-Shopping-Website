@@ -1,7 +1,6 @@
-<!-- product-form.component.html -->
 <div class="product-form-container">
   <div class="product-form">
-    <h2>Add New Product</h2>
+    <h2>{{ productId ? 'Edit' : 'Add' }} Product</h2>
     <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
       <label for="name">Name</label>
       <input id="name" formControlName="name" type="text">
@@ -11,14 +10,16 @@
       
       <label for="price">Price</label>
       <input id="price" formControlName="price" type="number">
+      
+      <!-- <label for="imageUrl">Image URL</label>
+      <input id="imageUrl" formControlName="imageUrl" type="text"> -->
 
       <label for="stock">Stock</label>
       <input id="stock" formControlName="stock" type="number">
       
-      <!-- <label for="imageUrl">Image URL</label>
-      <input id="imageUrl" formControlName="imageUrl" type="text"> -->
-      
-      <button type="submit" [disabled]="productForm.invalid">Add Product</button>
+      <button type="submit" [disabled]="productForm.invalid" class="submit-button">{{ productId ? 'Update' : 'Add' }} Product</button>
+
+      <button *ngIf="isAdmin && productId" type="button" (click)="onDelete()" class="delete-button">Delete</button>
     </form>
   </div>
 </div>

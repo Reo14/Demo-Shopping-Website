@@ -7,12 +7,13 @@ import { Product } from '../models/product.models';
   providedIn: 'root'
 })
 export class ProductService {
-  private baseUrl = 'http://localhost:3000/products';
+  private baseUrl = 'http://localhost:4000/products';
 
   constructor(private http: HttpClient) {}
 
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
+    console.log('Token:', token);
     return new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
@@ -20,6 +21,7 @@ export class ProductService {
   }
 
   getProducts(): Observable<Product[]> {
+    console.log('GET Request to:', this.baseUrl);
     return this.http.get<Product[]>(this.baseUrl, { headers: this.getHeaders() });
   }
 

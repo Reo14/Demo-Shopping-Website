@@ -20,7 +20,7 @@ export class AuthService {
   login(username: string, password: string): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post<{ token: string, role: string }>(
-      'http://localhost:3000/auth/login', 
+      'http://localhost:4000/auth/login', 
       { username, password }, 
       { headers }
     ).pipe(
@@ -40,7 +40,7 @@ export class AuthService {
   signup(username: string, password: string, role: string = 'user'): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post<{ token: string, role: string }>(
-      'http://localhost:3000/auth/signup', 
+      'http://localhost:4000/auth/signup', 
       { username, password, role }, 
       { headers }
     ).pipe(

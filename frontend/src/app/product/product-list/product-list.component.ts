@@ -1,11 +1,9 @@
-// product-list.component.ts
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
-import { Product } from '../../models/product.models';
 import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
-
+import { Product } from '../../models/product.models';
 
 @Component({
   selector: 'app-product-list',
@@ -14,10 +12,10 @@ import { Router } from '@angular/router';
 })
 export class ProductListComponent implements OnInit {
   products: Product[] = [];
-  isAdmin = false;
-  p: number = 1; // 当前页码
-  itemsPerPage: number = 8; // 每页展示的产品数量
   sortedProducts: Product[] = [];
+  isAdmin = false;
+  itemsPerPage = 8;
+  p = 1;
 
   constructor(
     private productService: ProductService,
@@ -30,7 +28,7 @@ export class ProductListComponent implements OnInit {
     this.productService.getProducts().subscribe(
       (products) => {
         this.products = products;
-        this.sortedProducts = [...this.products]; // 初始化排序后的产品数组
+        this.sortedProducts = products; // Initialize sortedProducts
         console.log('Products loaded:', this.products);
       },
       (error) => {
@@ -43,34 +41,32 @@ export class ProductListComponent implements OnInit {
     });
   }
 
-  onSortChange(event: any): void {
-    const sortValue = event.target.value;
-    console.log('Sort by:', sortValue);
-
-    if (sortValue === 'update') {
-      this.sortedProducts.sort((a, b) => {
-        return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
-      });
-    } else if (sortValue === 'price') {
-      this.sortedProducts.sort((a, b) => a.price - b.price);
-    }
-  }
-
-  addProduct(): void {
-    console.log('Add product');
-    // 导航到添加产品页面
-    this.router.navigate(['/products/new']);
-  }
-
   addToCart(product: Product): void {
-    this.cartService.addToCart(product);
+    this.cartService.addToCart(product.id);
     console.log(`Product ${product.name} added to cart`);
   }
 
+  viewProduct(product: Product): void {
+    this.router.navigate(['/products', product.id, 'detail']);
+  }
+
   editProduct(product: Product): void {
-    console.log(`Edit product ${product.name}`);
-    // 编辑产品的逻辑，可以导航到编辑页面
+    this.router.navigate(['/products', product.id, 'edit']);
+  }
+
+  addProduct(): void {
+    this.router.navigate(['/products/new']);
+  }
+
+  onSortChange(event: any): void {
+    const sortBy = event.target.value;
+    if (sortBy === 'price') {
+      this.sortedProducts = this.products.sort((a, b) => a.price - b.price);
+    } else if (sortBy === 'updateTime') {
+      this.sortedProducts = this.products.sort((a, b) => 
+        new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+    } else {
+      this.sortedProducts = this.products;
+    }
   }
 }
-
-

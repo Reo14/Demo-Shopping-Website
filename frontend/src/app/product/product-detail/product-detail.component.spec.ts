@@ -1,23 +1,32 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { ProductService } from '../../services/product.service';
 
-import { ProductDetailComponent } from './product-detail.component';
+import { Product } from '../../models/product.models';
 
-describe('ProductDetailComponent', () => {
-  let component: ProductDetailComponent;
-  let fixture: ComponentFixture<ProductDetailComponent>;
+@Component({
+  selector: 'app-product-detail',
+  templateUrl: './product-detail.component.html',
+  styleUrls: ['./product-detail.component.css']
+})
+export class ProductDetailComponent implements OnInit {
+  product: Product | null = null;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [ProductDetailComponent]
-    })
-    .compileComponents();
+  constructor(
+    private route: ActivatedRoute,
+    private productService: ProductService,
     
-    fixture = TestBed.createComponent(ProductDetailComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+  ) { }
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+  ngOnInit(): void {
+    const productId = this.route.snapshot.paramMap.get('id');
+    if (productId) {
+      this.productService.getProduct(productId).subscribe(
+        (product) => this.product = product,
+        (error) => console.error('Error loading product:', error)
+      );
+    }
+  }
+
+  
+}

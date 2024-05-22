@@ -14,6 +14,15 @@ app.use('/auth', authRoutes);
 app.use('/products', productRoutes);
 app.use('/cart', cartRoutes);
 
+app.get('/', (req, res) => {
+    res.send('Server is running');
+});
+
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+  });
+
 sequelize.sync().then(() => {
     console.log('Database connected');
 });

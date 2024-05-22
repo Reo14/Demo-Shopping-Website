@@ -14,10 +14,10 @@
   </div>
 </div>
 <div class="products-list">
-  <div *ngFor="let product of sortedProducts | paginate: { itemsPerPage: itemsPerPage, currentPage: p }" class="product-item">
+  <div *ngFor="let product of sortedProducts | paginate: { itemsPerPage: itemsPerPage, currentPage: p }" class="product-item" (click)="viewProduct(product)">
     <!-- <img [src]="product.imageUrl || 'default-image.jpg'" alt="{{ product.name }}"> -->
     <h2>{{ product.name }}</h2>
-    <p>{{ product.description }}</p>
+    <!-- <p>{{ product.description }}</p> -->
     <div class="price">${{ product.price }}</div>
     <div class="buttons">
       <button (click)="addToCart(product)">Add to Cart</button>

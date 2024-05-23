@@ -1,3 +1,7 @@
+Node.js/Express + Angular
+
 Frontend: ng serve
 
-Backend: node app.js
+Backend: 
+npm install
+node app.js

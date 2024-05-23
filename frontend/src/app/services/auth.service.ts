@@ -19,7 +19,7 @@ export class AuthService {
 
   login(username: string, password: string): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post<{ token: string, role: string }>(
+    return this.http.post<{ token: string, role: string, userId: string }>(
       'http://localhost:4000/auth/login', 
       { username, password }, 
       { headers }
@@ -29,6 +29,7 @@ export class AuthService {
         if (response && response.role) {
           this.userRoleSubject.next(response.role);
           localStorage.setItem('token', response.token);
+          localStorage.setItem('userId', response.userId);
           localStorage.setItem('role', response.role); // 保存角色信息
         } else {
           console.error('Login response missing role:', response);

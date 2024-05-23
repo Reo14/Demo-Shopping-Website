@@ -6,15 +6,16 @@
       <div class="cart-item">
         <p *ngIf="item.product"> {{ item.product.name }}</p>
         <p>
-          <input type="number" [value]="item.quantity" (input)="updateQuantity(item.product.id, $event)">
+          <input type="number" [value]="item.quantity" (input)="updateQuantity(item.id, $event)">
         </p>
-        <p *ngIf="item.product"><strong>Price:</strong> {{ item.product.price | currency }}</p>
-        <button *ngIf="item.product?.id !== undefined" (click)="removeFromCart(item.product.id!)">Remove</button>
+        <p *ngIf="item.product"> {{ item.product.price | currency }}</p>
+        <button *ngIf="item.id !== undefined" (click)="removeFromCart(item.id!)">Remove</button>
       </div>
     </div>
     <div class="cart-summary">
       <p><strong>Total:</strong> {{ totalPrice | currency }}</p>
     </div>
+    <button >Check Out</button>
   </div>
 </div>
 

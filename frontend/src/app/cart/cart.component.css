@@ -101,5 +101,9 @@
   .checkout-button:hover {
     background-color: #218838;
   }
+
+  .cart-item input[type="number"] {
+    width: 60px; /* 你可以根据需要调整这个值 */
+  }
   
   

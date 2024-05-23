@@ -17,8 +17,21 @@ export class CartComponent implements OnInit {
     this.loadCartItems();
   }
 
+  private getUserId(): string | null {
+    return localStorage.getItem('userId');
+  }
+
+  
+
   loadCartItems(): void {
-    this.cartService.getCartItems().subscribe(
+
+    const userId = this.getUserId();
+    if (!userId) {
+      console.error('User ID is not available');
+      return;
+    }
+    
+    this.cartService.getCartItems(userId).subscribe(
       (data: CartItem[]) => {
         this.cartItems = data;
         this.calculateTotalPrice();
@@ -33,17 +46,17 @@ export class CartComponent implements OnInit {
     this.totalPrice = this.cartItems.reduce((total, item) => total + item.quantity * item.product.price, 0);
   }
 
-  updateQuantity(productId: string | undefined, event: Event): void {
-    if (!productId) return;
+  updateQuantity(id: string, event: Event): void {
+    if (!id) return;
     const inputElement = event.target as HTMLInputElement;
     const updatedQuantity = Number(inputElement.value);
     if (updatedQuantity <= 0) {
-      this.removeFromCart(productId);
+      this.removeFromCart(id);
     } else {
-      const item = this.cartItems.find(i => i.product.id === productId);
+      const item = this.cartItems.find(i => i.id === id);
       if (item) {
         item.quantity = updatedQuantity;
-        this.cartService.updateCartItem(productId, updatedQuantity).subscribe(
+        this.cartService.updateCartItem(id, updatedQuantity).subscribe(
           () => {
             this.calculateTotalPrice();
           },
@@ -55,11 +68,11 @@ export class CartComponent implements OnInit {
     }
   }
 
-  removeFromCart(productId: string): void {
-    console.log('Removing product with ID:', productId); // 添加日志以调试
-    this.cartService.removeFromCart(productId).subscribe(
+  removeFromCart(id: string): void {
+    console.log('Removing cart item with ID:', id); // Add logging for debugging
+    this.cartService.removeFromCart(id).subscribe(
       () => {
-        this.cartItems = this.cartItems.filter(item => item.product.id !== productId);
+        this.cartItems = this.cartItems.filter(item => item.id !== id);
         this.calculateTotalPrice();
       },
       (error: any) => {

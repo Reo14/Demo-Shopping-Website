@@ -42,12 +42,17 @@ export class ProductListComponent implements OnInit {
   }
 
   addToCart(product: Product): void {
-    this.cartService.addToCart(product.id);
-    console.log(`Product ${product.name} added to cart`);
+    try {
+      this.cartService.addToCart(product.id);
+      console.log(`Product ${product.name} added to cart`);
+    } catch (error) {
+      console.error('Error adding product to cart:', error);
+    }
   }
 
   viewProduct(product: Product): void {
-    this.router.navigate(['/products', product.id, 'detail']);
+    console.log(`Viewing product: ${product.name}`);
+    this.router.navigate(['/products', product.id]);
   }
 
   editProduct(product: Product): void {

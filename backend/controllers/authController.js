@@ -15,19 +15,27 @@ const signUp = async (req, res) => {
 
 const login = async (req, res) => {
     const { username, password } = req.body;
+  
     try {
-        const user = await User.findOne({ where: { username } });
-        if (!user || !await bcrypt.compare(password, user.password)) {
-            return res.status(401).json({ error: 'Invalid credentials' });
-        }
-        console.log('User found:', user); // 打印用户对象，确认是否包含角色字段
-        const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET);
-        console.log('User role:', user.role); // 打印用户角色
-        res.json({ token, role: user.role }); // 返回 token 和 role
-    } catch (err) {
-        res.status(400).json({ error: err.message });
+      const user = await User.findOne({ where: { username } });
+  
+      if (!user || !await bcrypt.compare(password, user.password)) {
+        return res.status(401).json({ message: 'Invalid username or password' });
+      }
+  
+      const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+  
+      res.json({
+        token,
+        role: user.role,
+        userId: user.id // 返回 userId
+      });
+    } catch (error) {
+      console.error('Login error:', error);
+      res.status(500).json({ message: 'Internal server error' });
     }
-};
+  };
+  
 
 const updatePassword = async (req, res) => {
     const { username, newPassword } = req.body;

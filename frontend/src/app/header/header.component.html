@@ -1,6 +1,6 @@
 <header class="header">
   <div class="header-left">
-    <span class="logo">Online Shopping</span>
+    <span class="logo" (click) = "backToMainPage()">Online Shopping</span>
   </div>
   <div class="header-middle">
     <input type="text" class="search-input" placeholder="Search">
@@ -11,7 +11,7 @@
       <i class="fas fa-user"></i> {{ isLoggedIn ? 'Sign Out' : 'Sign In' }}
     </button>
     <button class="cart-button" [routerLink]="['/cart']">
-      <i class="fas fa-shopping-cart"></i> $0.00
+      <i class="fas fa-shopping-cart"></i> View Cart
     </button>
   </div>
 </header>

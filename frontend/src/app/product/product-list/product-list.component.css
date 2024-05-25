@@ -94,3 +94,36 @@
     max-width: 450px
   }
 }
+
+.viewProduct:hover {
+  cursor: pointer;
+}
+
+.sort-add-buttons {
+  display: flex;
+  align-items: center;
+}
+
+.sort-button {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+}
+
+.sort-button select {
+  margin-left: 10px;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+.add-product-button {
+  background-color: #800080; /* 紫色 */
+  color: #fff;
+  margin-left: 10px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

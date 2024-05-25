@@ -15,7 +15,7 @@
 <div class="products-list">
   <div *ngFor="let product of sortedProducts | paginate: { itemsPerPage: itemsPerPage, currentPage: p }" class="product-item">
     <img [src]="product.imageUrl" alt="{{ product.name }}" *ngIf="product.imageUrl" class="product-image">
-    <div (click)="viewProduct(product)">
+    <div (click)="viewProduct(product)" class = "viewProduct">
       <h2>{{ product.name }}</h2>
       <div class="price">${{ product.price }}</div>
     </div>

@@ -16,6 +16,7 @@ export class ProductListComponent implements OnInit, AfterViewChecked {
   isAdmin = false;
   itemsPerPage = 8;
   p = 1;
+  sortDirection = true; // true for ascending, false for descending
 
   constructor(
     private productService: ProductService,
@@ -30,7 +31,7 @@ export class ProductListComponent implements OnInit, AfterViewChecked {
     this.productService.getProducts().subscribe(
       (products) => {
         this.products = products;
-        this.sortedProducts = products; // Initialize sortedProducts
+        this.sortedProducts = [...products]; // Initialize sortedProducts
         console.log('Products loaded:', this.products);
         this.adjustImageStyles(); // Adjust image styles after loading products
       },
@@ -79,13 +80,17 @@ export class ProductListComponent implements OnInit, AfterViewChecked {
 
   onSortChange(event: any): void {
     const sortBy = event.target.value;
+    this.sortDirection = !this.sortDirection; // Toggle sort direction
     if (sortBy === 'price') {
-      this.sortedProducts = this.products.sort((a, b) => a.price - b.price);
+      this.sortedProducts = [...this.products].sort((a, b) => 
+        this.sortDirection ? a.price - b.price : b.price - a.price);
     } else if (sortBy === 'updateTime') {
-      this.sortedProducts = this.products.sort((a, b) => 
+      this.sortedProducts = [...this.products].sort((a, b) => 
+        this.sortDirection ? 
+        new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime() : 
         new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
     } else {
-      this.sortedProducts = this.products;
+      this.sortedProducts = [...this.products];
     }
     this.adjustImageStyles(); // Adjust image styles after sorting
   }

@@ -9,7 +9,9 @@
           <input type="number" [value]="item.quantity" (input)="updateQuantity(item.id, $event)">
         </p>
         <p *ngIf="item.product"> {{ item.product.price | currency }}</p>
-        <button *ngIf="item.id !== undefined" (click)="removeFromCart(item.id!)">Remove</button>
+        <button *ngIf="item.id !== undefined" (click)="removeFromCart(item.id!)">
+          <i class="fas fa-trash-alt"></i>
+        </button>
       </div>
     </div>
     <div class="cart-summary">

@@ -61,6 +61,7 @@ export class AuthService {
     this.userRoleSubject.next('');
     localStorage.removeItem('token');
     localStorage.removeItem('role'); // 移除角色信息
+    localStorage.removeItem('userId');
   }
 
   getUserRole(): Observable<string> {

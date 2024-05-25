@@ -1,5 +1,6 @@
 <div class="product-detail-wrapper">
   <div *ngIf="product" class="product-detail-container">
+    <img [src]="product.imageUrl" alt="{{ product.name }}" *ngIf="product.imageUrl">
     <h2>{{ product.name }}</h2>
     <p class="description">{{ product.description }}</p>
     <p class="price">Price: {{ product.price | currency }}</p>
@@ -10,4 +11,3 @@
     <p>Loading product details...</p>
   </div>
 </div>
-

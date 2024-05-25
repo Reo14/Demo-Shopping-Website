@@ -79,3 +79,12 @@ button.delete-button {
 button.delete-button:hover {
   background-color: darkred;
 }
+
+.product-form img {
+  max-width: 100%;
+  max-height: 200px; 
+  width: auto;
+  height: auto;
+  display: block;
+  margin-top: 10px;
+}

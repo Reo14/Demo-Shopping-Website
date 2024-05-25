@@ -14,6 +14,7 @@
 </div>
 <div class="products-list">
   <div *ngFor="let product of sortedProducts | paginate: { itemsPerPage: itemsPerPage, currentPage: p }" class="product-item">
+    <img [src]="product.imageUrl" alt="{{ product.name }}" *ngIf="product.imageUrl" class="product-image">
     <div (click)="viewProduct(product)">
       <h2>{{ product.name }}</h2>
       <div class="price">${{ product.price }}</div>
@@ -25,5 +26,5 @@
   </div>
 </div>
 <div class="pagination-wrapper">
-  <pagination-controls (pageChange)="p = $event" class='pagination-controls'></pagination-controls>
+  <pagination-controls (pageChange)="onPageChange($event)" class='pagination-controls'></pagination-controls>
 </div>

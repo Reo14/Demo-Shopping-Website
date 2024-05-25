@@ -11,12 +11,18 @@
       <label for="price">Price</label>
       <input id="price" formControlName="price" type="number">
       
-      <!-- <label for="imageUrl">Image URL</label>
-      <input id="imageUrl" formControlName="imageUrl" type="text"> -->
-
+  
       <label for="stock">Stock</label>
       <input id="stock" formControlName="stock" type="number">
+
       
+      <label for="imageUrl">Image URL</label>
+      <input id="imageUrl" formControlName="imageUrl" (input)="updateImagePreview()" />
+
+      <div *ngIf="imagePreview">
+        <img [src]="imagePreview" alt="Product Image Preview" />
+      </div>
+  
       <button type="submit" [disabled]="productForm.invalid" class="submit-button">{{ productId ? 'Update' : 'Add' }} Product</button>
 
       <button *ngIf="isAdmin && productId" type="button" (click)="onDelete()" class="delete-button">Delete</button>

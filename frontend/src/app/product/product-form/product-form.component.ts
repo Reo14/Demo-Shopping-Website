@@ -14,6 +14,8 @@ export class ProductFormComponent implements OnInit {
   productForm: FormGroup;
   productId: string | null = null;
   isAdmin = false;
+  imagePreview: string | null = null;
+  
 
   constructor(
     private fb: FormBuilder,
@@ -32,11 +34,9 @@ export class ProductFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-    
     this.authService.getUserRole().subscribe(role => {
-        this.isAdmin = role === 'admin';
-      });
+      this.isAdmin = role === 'admin';
+    });
 
     this.route.paramMap.subscribe(params => {
       this.productId = params.get('id');
@@ -44,21 +44,33 @@ export class ProductFormComponent implements OnInit {
         this.loadProduct(this.productId);
       }
     });
+
+    this.productForm.get('imageUrl')!.valueChanges.subscribe(() => {
+      this.updateImagePreview();
+    });
   }
 
   loadProduct(id: string): void {
-    
     console.log(`Fetching product with ID: ${id}`);
-    
+
     this.productService.getProduct(id).subscribe(
       (product: Product) => {
         this.productForm.patchValue(product);
+        this.updateImagePreview();
       },
       error => {
         console.error('Error loading product:', error);
       }
     );
   }
+
+  updateImagePreview(): void {
+    this.imagePreview = this.productForm.get('imageUrl')!.value;
+  }
+
+  
+  
+  
 
   onSubmit(): void {
     if (this.productForm.valid) {

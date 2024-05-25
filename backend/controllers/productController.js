@@ -1,9 +1,9 @@
 const Product = require('../models/product');
 
 const createProduct = async (req, res) => {
-    const { name, description, price, stock } = req.body;
+    const { name, description, price, stock, imageUrl } = req.body;
     try {
-        const product = await Product.create({ name, description, price, stock });
+        const product = await Product.create({ name, description, price, stock, imageUrl });
         res.status(201).json(product);
     } catch (err) {
         res.status(400).json({ error: err.message });
@@ -34,7 +34,7 @@ const getProduct = async (req, res) => {
 
 const editProduct = async (req, res) => {
     const { id } = req.params;
-    const { name, description, price, stock } = req.body;
+    const { name, description, price, stock, imageUrl } = req.body;
     try {
         const product = await Product.findByPk(id);
         if (!product) {
@@ -44,6 +44,7 @@ const editProduct = async (req, res) => {
         product.description = description;
         product.price = price;
         product.stock = stock;
+        product.imageUrl = imageUrl;
         await product.save();
         res.json(product);
     } catch (err) {

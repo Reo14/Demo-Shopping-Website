@@ -36,8 +36,8 @@ describe('CartComponent', () => {
 
   it('should load cart items on init', () => {
     const products: Product[] = [
-      { id: '1', name: 'Product 1', description: 'Description 1', price: 100, stock: 10, updatedAt: new Date() },
-      { id: '2', name: 'Product 2', description: 'Description 2', price: 200, stock: 20, updatedAt: new Date() }
+      { id: '1', name: 'Product 1', description: 'Description 1', price: 100, stock: 10, updatedAt: new Date(), imageUrl: '' },
+      { id: '2', name: 'Product 2', description: 'Description 2', price: 200, stock: 20, updatedAt: new Date(), imageUrl: '' }
     ];
     const cartItems: CartItem[] = [
       { id: '1', userId: 'user1', productId: '1', quantity: 1, product: products[0] },
@@ -64,7 +64,7 @@ describe('CartComponent', () => {
   });
 
   it('should update quantity of a cart item', () => {
-    const product: Product = { id: '1', name: 'Product 1', description: 'Description 1', price: 100, stock: 10, updatedAt: new Date() };
+    const product: Product = { id: '1', name: 'Product 1', description: 'Description 1', price: 100, stock: 10, updatedAt: new Date(), imageUrl: '' };
     const cartItems: CartItem[] = [
       { id: '1', userId: 'user1', productId: '1', quantity: 1, product }
     ];
@@ -100,7 +100,7 @@ describe('CartComponent', () => {
   });
 
   it('should remove a cart item', () => {
-    const product: Product = { id: '1', name: 'Product 1', description: 'Description 1', price: 100, stock: 10, updatedAt: new Date() };
+    const product: Product = { id: '1', name: 'Product 1', description: 'Description 1', price: 100, stock: 10, updatedAt: new Date(), imageUrl: '' };
     const cartItems: CartItem[] = [
       { id: '1', userId: 'user1', productId: '1', quantity: 1, product }
     ];

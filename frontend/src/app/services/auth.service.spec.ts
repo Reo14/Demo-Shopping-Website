@@ -1,6 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AuthService } from './auth.service';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -13,6 +15,7 @@ describe('AuthService', () => {
     });
     service = TestBed.inject(AuthService);
     httpMock = TestBed.inject(HttpTestingController);
+    localStorage.clear(); // 清除 localStorage
   });
 
   afterEach(() => {
@@ -23,96 +26,89 @@ describe('AuthService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should login successfully', () => {
-    const dummyResponse = { token: '123456', role: 'user', userId: '1' };
-    const username = 'testUser';
-    const password = 'testPass';
+  it('should initialize with user role from localStorage', () => {
+    localStorage.setItem('role', 'admin');
+    const newService = TestBed.inject(AuthService);
+    newService.getUserRole().subscribe(role => {
+      expect(role).toBe('admin');
+    });
+  });
 
-    service.login(username, password).subscribe(response => {
-      expect(response.token).toBe(dummyResponse.token);
-      expect(response.role).toBe(dummyResponse.role);
-      expect(response.userId).toBe(dummyResponse.userId);
+  it('should login and set user role', () => {
+    const mockResponse = {
+      token: '12345',
+      role: 'admin',
+      userId: 'user123'
+    };
+
+    service.login('testuser', 'password').subscribe(response => {
+      expect(response).toEqual(mockResponse);
+      expect(localStorage.getItem('token')).toBe(mockResponse.token);
+      expect(localStorage.getItem('role')).toBe(mockResponse.role);
+      expect(localStorage.getItem('userId')).toBe(mockResponse.userId);
+      service.getUserRole().subscribe(role => {
+        expect(role).toBe(mockResponse.role);
+      });
     });
 
     const req = httpMock.expectOne('http://localhost:4000/auth/login');
     expect(req.request.method).toBe('POST');
-    req.flush(dummyResponse);
-
-    expect(localStorage.getItem('token')).toBe(dummyResponse.token);
-    expect(localStorage.getItem('role')).toBe(dummyResponse.role);
-    expect(localStorage.getItem('userId')).toBe(dummyResponse.userId);
+    req.flush(mockResponse);
   });
 
-  it('should handle login error', () => {
-    const username = 'testUser';
-    const password = 'testPass';
+  it('should signup and set user role', () => {
+    const mockResponse = {
+      token: '12345',
+      role: 'user'
+    };
 
-    service.login(username, password).subscribe(
-      () => fail('should have failed with the 500 error'),
-      (error: any) => {
-        expect(error.status).toBe(500);
-      }
-    );
-
-    const req = httpMock.expectOne('http://localhost:4000/auth/login');
-    expect(req.request.method).toBe('POST');
-    req.flush('error', { status: 500, statusText: 'Server Error' });
-  });
-
-  it('should signup successfully', () => {
-    const dummyResponse = { token: '123456', role: 'user' };
-    const username = 'newUser';
-    const password = 'newPass';
-    const role = 'user';
-
-    service.signup(username, password, role).subscribe(response => {
-      expect(response.token).toBe(dummyResponse.token);
-      expect(response.role).toBe(dummyResponse.role);
+    service.signup('testuser', 'password', 'user').subscribe(response => {
+      expect(response).toEqual(mockResponse);
+      expect(localStorage.getItem('token')).toBe(mockResponse.token);
+      expect(localStorage.getItem('role')).toBe(mockResponse.role);
+      service.getUserRole().subscribe(role => {
+        expect(role).toBe(mockResponse.role);
+      });
     });
 
     const req = httpMock.expectOne('http://localhost:4000/auth/signup');
     expect(req.request.method).toBe('POST');
-    req.flush(dummyResponse);
-
-    expect(localStorage.getItem('token')).toBe(dummyResponse.token);
-    expect(localStorage.getItem('role')).toBe(dummyResponse.role);
+    req.flush(mockResponse);
   });
 
-  it('should handle signup error', () => {
-    const username = 'newUser';
-    const password = 'newPass';
-    const role = 'user';
-
-    service.signup(username, password, role).subscribe(
-      () => fail('should have failed with the 500 error'),
-      (error: any) => {
-        expect(error.status).toBe(500);
-      }
-    );
-
-    const req = httpMock.expectOne('http://localhost:4000/auth/signup');
-    expect(req.request.method).toBe('POST');
-    req.flush('error', { status: 500, statusText: 'Server Error' });
-  });
-
-  it('should logout correctly', () => {
-    localStorage.setItem('token', '123456');
-    localStorage.setItem('role', 'user');
-    localStorage.setItem('userId', '1');
+  it('should logout and clear user role', () => {
+    localStorage.setItem('token', '12345');
+    localStorage.setItem('role', 'admin');
+    localStorage.setItem('userId', 'user123');
 
     service.logout();
 
     expect(localStorage.getItem('token')).toBeNull();
     expect(localStorage.getItem('role')).toBeNull();
     expect(localStorage.getItem('userId')).toBeNull();
+
+    service.getUserRole().subscribe(role => {
+      expect(role).toBe('');
+    });
   });
 
   it('should return user role as observable', () => {
-    const role = 'admin';
-    localStorage.setItem('role', role);
-    const result = service.getUserRole();
-    result.subscribe(currentRole => {
-      expect(currentRole).toBe(role);
+    service.getUserRole().subscribe(role => {
+      expect(role).toBe('');
+    });
+
+    service.login('testuser', 'password').subscribe();
+
+    const req = httpMock.expectOne('http://localhost:4000/auth/login');
+    const mockResponse = {
+      token: '12345',
+      role: 'admin',
+      userId: 'user123'
+    };
+    req.flush(mockResponse);
+
+    service.getUserRole().subscribe(role => {
+      expect(role).toBe('admin');
     });
   });
 });

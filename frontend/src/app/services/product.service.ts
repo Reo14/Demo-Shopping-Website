@@ -12,7 +12,12 @@ export class ProductService {
   constructor(private http: HttpClient) {}
 
   private getHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
+    let token = localStorage.getItem('token');
+    if (!token) {
+      const defaultToken = 'default-token';
+      localStorage.setItem('token', defaultToken);
+      token = localStorage.getItem('token');
+    }
     console.log('Token:', token);
     return new HttpHeaders({
       'Content-Type': 'application/json',

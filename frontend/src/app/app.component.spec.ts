@@ -1,29 +1,42 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { CartService } from './services/cart.service';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('AppComponent', () => {
+  let component: AppComponent;
+  let fixture: ComponentFixture<AppComponent>;
+  let cartService: CartService;
+
   beforeEach(async () => {
+    const cartServiceMock = {
+      loadCartItems: jest.fn()
+    };
+
     await TestBed.configureTestingModule({
-      imports: [AppComponent],
+      declarations: [AppComponent],
+      providers: [{ provide: CartService, useValue: cartServiceMock }],
+      schemas: [NO_ERRORS_SCHEMA] // Ignores unknown elements and attributes
     }).compileComponents();
   });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
+  beforeEach(() => {
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
+    cartService = TestBed.inject(CartService);
   });
 
-  it(`should have the 'frontend' title`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('frontend');
+  it('should create the app component', () => {
+    expect(component).toBeTruthy();
   });
 
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, frontend');
+  it(`should have as title 'Online Shopping System'`, () => {
+    expect(component.title).toEqual('Online Shopping System');
+  });
+
+  it('should call loadCartItems on init', () => {
+    const loadCartItemsSpy = jest.spyOn(cartService, 'loadCartItems');
+    component.ngOnInit();
+    expect(loadCartItemsSpy).toHaveBeenCalled();
   });
 });

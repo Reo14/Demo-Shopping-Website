@@ -58,3 +58,28 @@
   cursor: pointer;
   font-size: 1rem;
 }
+
+.button-container {
+  display: flex !important;
+  flex-direction: column !important; /* 修改为列方向 */
+  align-items: center;
+  margin-top: 20px;
+}
+
+.button-container button {
+  background-color: #ff6600;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-bottom: 10px; /* 添加底部外边距 */
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%; /* 按钮宽度设为100% */
+  max-width: 200px; /* 最大宽度 */
+}
+
+.delete-button {
+  margin-bottom: 0; 
+  color: yellow;
+  background-color: black
+}

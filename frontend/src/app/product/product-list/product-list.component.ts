@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
 import { AuthService } from '../../services/auth.service';
+
 import { Product } from '../../models/product.models';
 
 @Component({
@@ -102,7 +103,7 @@ export class ProductListComponent implements OnInit, AfterViewChecked {
     }, 0);
   }
 
-  private calculateItemsPerPage(): void {
+  public calculateItemsPerPage(): void {
     const width = window.innerWidth;
     let itemsPerRow;
     if (width >= 1200) {

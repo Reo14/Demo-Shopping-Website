@@ -7,3 +7,6 @@ ng serve
 Backend: 
 npm install
 node app.js
+
+Test:
+ng test
